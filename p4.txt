@@ -1,0 +1,39 @@
+## Arquitetura grafica raster
+
+### Descricao de cenas
+E preciso indicar as coordenadas e dizer quais os pontos a ligar.
+Geometria: posicao do vertice
+Tipologia: ligacoes a serem feitas
+Atributos: cor e brilho
+
+## Sintese de imagens
+
+### Percecao 3D
+Dadas por: 
+    - Duas imagens independentes uma para cada olho;
+    - Oclusao de objetos;
+    - Gradientes de cor;
+    - Sombras
+
+### Métodos para Síntese de Imagens
+#### Object driven
+    Cada objeto e processado de forma individual.
+
+#### Image driven
+    Determina quais os objetos visiveis em cada pixel.
+
+#### Ilumincao Global vs Local
+    <b>Global</b>: a cena e tratada como um todo, permitindo a interecao entre objetos;
+    <b>Local</b>: cada objeto e tratado de forma independente, permitindo ter resultados aproximados.
+
+#### Abordagem fisica
+
+##### Ray Tracing
+    Os fotoes sao seguidos desde a fonte ate serem abosrvidos ou desaparecerem.
+
+##### Radiosidade
+    Transferencia de energia entre objetos
+
+#### Abordagem pratica
+
+    Os objetos sao processados pela ordem em que sao gerados.
