@@ -14,20 +14,21 @@ function setup(shaders)
     program = buildProgramFromSources(gl, shaders["shader.vert"], shaders["shader.frag"]);
 
     const vertices = [ vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0, 0.5)];
-    const colors = [vec4(1.0, 0.0, 0.0, 0.5), vec4(0.0, 1.0, 0.0, 0.5), vec4(0.0, 0.0, 1.0, 0.5)];
+    const colors = [vec4(1.0, 0.0, 0.0, 1.0), vec4(0.0, 1.0, 0.0, 1.0), vec4(0.0, 0.0, 1.0, 1.0)];
 
     const aBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, aBuffer);
 
-    gl.bufferData(gl.ARRAY_BUFFER, size, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, 4*(vertices.length*2 + colors.length * 4), gl.STATIC_DRAW);
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(vertices));
+    gl.bufferSubData(gl.ARRAY_BUFFER, 4*vertices.length*2, flatten(colors))
 
     const vPosition = gl.getAttribLocation(program, "vPosition");
     gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
 
     const vColor = gl.getAttribLocation(program, "vColor");
-    gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 4*vertices.length*2);
     gl.enableVertexAttribArray(vColor);
 
     // Setup the viewport
