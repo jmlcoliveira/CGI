@@ -19,6 +19,8 @@ let instances = [];
 let cubeCount = 0;
 let sphereCount= 0;
 
+let index = -1;
+
 
 function render(time)
 {
@@ -31,8 +33,8 @@ function render(time)
     const uCtm = gl.getUniformLocation(program, "uCtm");
 
     for(let i = 0; i<instances.length; i++){
-        instances[i].obj.draw(gl, program, gl.LINES);
         gl.uniformMatrix4fv(uCtm, false, flatten(mult(mProjection, mult(mView, instances[i].mod))));
+        instances[i].obj.draw(gl, program, gl.LINES);
     }
 
 }
@@ -124,14 +126,19 @@ function setup(shaders)
     });
 
     document.getElementById("btn_remove").addEventListener("click", function(){
+        if(index != -1)
+            instances
         instances.pop();
         document.getElementById('object_instances').remove(instances.length);
     });
 
     document.getElementById("object_instances").addEventListener("click", function(){
         let select = document.getElementById("object_instances");
-        let i = select.selectedIndex;
-        console.log(instances[i]);
+        index = select.selectedIndex;
+    })
+
+    document.getElementById("transform_container").addEventListener("click", function() {
+        instances[index].mod = getmModel();
     })
 
     window.requestAnimationFrame(render);
