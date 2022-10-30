@@ -147,6 +147,8 @@ function setup(shaders)
     });
 
     document.getElementById("add_cube").addEventListener("click", function(){
+        reset();
+        index = instances.length;
         instances.push({
             obj: CUBE, 
             mod: getmModel(),
@@ -169,6 +171,8 @@ function setup(shaders)
     });
 
     document.getElementById("add_sphere").addEventListener("click", function(){
+        reset();
+        index = instances.length;
         instances.push({
             obj: SPHERE, 
             mod: getmModel(),
@@ -191,16 +195,20 @@ function setup(shaders)
     });
 
     document.getElementById("btn_remove").addEventListener("click", function(){
-        if(index != -1)
-            instances
-        instances.pop();
-        document.getElementById('object_instances').remove(instances.length);
+        if(index != -1){
+            instances.splice(index, 1)
+            document.getElementById('object_instances').remove(index);
+            if(index == instances.length)
+                index--;
+            updateValues();
+        }
+        else {
+            instances.pop();
+            document.getElementById('object_instances').remove(instances.length);
+        }
     });
 
-    document.getElementById("object_instances").addEventListener("change", function(){
-        let select = document.getElementById("object_instances");
-        index = select.selectedIndex;
-
+    function updateValues(){
         document.getElementById("px").value = instances[index].px
         document.getElementById("py").value = instances[index].py
         document.getElementById("pz").value = instances[index].pz
@@ -210,6 +218,13 @@ function setup(shaders)
         document.getElementById("rx").value = instances[index].rx
         document.getElementById("ry").value = instances[index].ry
         document.getElementById("rz").value = instances[index].rz
+    }
+
+    document.getElementById("object_instances").addEventListener("change", function(){
+        let select = document.getElementById("object_instances");
+        index = select.selectedIndex;
+
+        updateValues()
     })
 
     document.getElementById("transform_container").addEventListener("change", function() {
@@ -251,6 +266,18 @@ function setup(shaders)
             }
         }
     })
+
+    function reset(){
+        document.getElementById("px").value = 0.0
+        document.getElementById("py").value = 0.0
+        document.getElementById("pz").value = 0.0
+        document.getElementById("sx").value = 1.0
+        document.getElementById("sy").value = 1.0
+        document.getElementById("sz").value = 1.0
+        document.getElementById("rx").value = 1.0
+        document.getElementById("ry").value = 0.0
+        document.getElementById("rz").value = 0.0
+    }
 
     window.requestAnimationFrame(render);
 }
