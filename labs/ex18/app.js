@@ -8,7 +8,7 @@ import * as SPHERE from '../../libs/objects/sphere.js';
 let gl;
 
 let time = 0;           // Global simulation time in days
-let speed = 1/60.0;     // Speed (how many days added to time on each render pass
+let speed = 1/240.0;     // Speed (how many days added to time on each render pass
 let mode;               // Drawing mode (gl.LINES or gl.TRIANGLES)
 let animation = true;   // Animation is running
 
@@ -34,9 +34,8 @@ const EARTH_YEAR = 365.26;
 const EARTH_DAY = 0.99726968;
 
 const MOON_DIAMETER = 3474*PLANET_SCALE;
-const MOON_ORBIT = 363396*ORBIT_SCALE;
+const MOON_ORBIT = 363396;
 const MOON_YEAR = 28;
-const MOON_DAY = 0;
 
 const VP_DISTANCE = EARTH_ORBIT;
 
@@ -118,6 +117,40 @@ function setup(shaders)
     {
         multScale([MERCURY_DIAMETER, MERCURY_DIAMETER, MERCURY_DIAMETER]);
         multRotationY(360*time/MERCURY_DAY);
+        //multTranslation([10, 10, 10])
+
+        // Send the current modelview matrix to the vertex shader
+        uploadModelView();
+
+        // Draw a sphere representing the sun
+        SPHERE.draw(gl, program, mode);
+    }
+
+    function Venus(){
+        multScale([VENUS_DIAMETER, VENUS_DIAMETER, VENUS_DIAMETER]);
+        multRotationY(360*time/VENUS_DAY);
+        //multTranslation([10, 10, 10])
+
+        // Send the current modelview matrix to the vertex shader
+        uploadModelView();
+
+        // Draw a sphere representing the sun
+        SPHERE.draw(gl, program, mode);
+    }
+
+    function Earth(){
+        multScale([EARTH_DIAMETER, EARTH_DIAMETER, EARTH_DIAMETER]);
+        multRotationY(360*time/EARTH_DAY);
+
+        // Send the current modelview matrix to the vertex shader
+        uploadModelView();
+
+        // Draw a sphere representing the sun
+        SPHERE.draw(gl, program, mode);
+    }
+
+    function Mon(){
+        multScale([MOON_DIAMETER, MOON_DIAMETER, MOON_DIAMETER]);
 
         // Send the current modelview matrix to the vertex shader
         uploadModelView();
@@ -139,15 +172,42 @@ function setup(shaders)
     
         loadMatrix(lookAt([0,VP_DISTANCE,VP_DISTANCE], [0,0,0], [0,1,0]));
 
-        pushMatrix();
-        pushMatrix();
-        Sun();
-        popMatrix();
-        popMatrix();
-        multTranslation([EARTH_ORBIT, 0, 0])
-        pushMatrix();
-        Mercury();
+        solarSystem();
 
+    }
+
+    function EarthAndMoon(){
+        pushMatrix();
+            Earth();
+        popMatrix();
+        pushMatrix();
+            multRotationY(360*time/MOON_YEAR);
+            multTranslation([MOON_ORBIT, 0, 0]);
+            Mon();
+        popMatrix();
+    }
+
+    function solarSystem(){
+        pushMatrix();
+            pushMatrix();
+                Sun();
+            popMatrix();
+        popMatrix();
+        pushMatrix();
+            multRotationY(360*time/MERCURY_YEAR);
+            multTranslation([MERCURY_ORBIT, 0, 0]);
+            Mercury();
+        popMatrix();
+        pushMatrix();
+            multRotationY(360*time/VENUS_YEAR);
+            multTranslation([VENUS_ORBIT, 0, 0]);
+            Venus();
+        popMatrix();
+        pushMatrix();
+            multRotationY(360*time/EARTH_YEAR);
+            multTranslation([EARTH_ORBIT, 0, 0]);
+            EarthAndMoon();
+        popMatrix();
     }
 }
 
